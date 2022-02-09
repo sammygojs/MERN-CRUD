@@ -19,6 +19,15 @@ db.once("open", function () {
   console.log("Connected successfully");
 });
 
+app.get('/api/read',(req,res)=>{
+    FoodModel.find({},(err,result)=>{
+        if(err){
+            res.send(err)
+        }
+        res.send(result)
+    })
+})
+
 app.get('/', async (req,res)=>{
     const Food = new FoodModel({foodName:"Apple",daysSinceAte:2})
     try{
