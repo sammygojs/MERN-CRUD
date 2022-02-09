@@ -2,7 +2,8 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose');
 const FoodModel = require('./models/Food');
-const cors = require('cors')
+const cors = require('cors');
+const Food = require('./models/Food');
 app.use(cors())
 app.use(express.json())
 
@@ -54,6 +55,33 @@ app.post('/api/insert', async (req,res)=>{
     catch (err){
         console.log("error: ",err)
     }
+})
+
+app.delete(`/api/delete/:id`, async (req,res)=>{
+    const id = req.params.id;
+    await FoodModel.findByIdAndRemove(id).exec()
+    res.send(`deleted`)
+    // FoodModel.findById(id)
+    // console.log("foodname: ",foodName)
+    
+})
+
+app.put(`/api/update`, async (req,res)=>{
+    const id = req.body.id
+    const newFoodName = req.body.newFoodName
+    console.log("newFoodname: ",newFoodName)
+    console.log("id: ",id)
+    try{
+        await FoodModel.findById(id, (err,updatedFood)=>{
+            updatedFood.foodName=newFoodName
+            updatedFood.save()
+        })
+        res.send("newFoodName")
+    }catch(err){
+        console.log(err)
+    }
+    
+    
 })
 
 const PORT = 3001
